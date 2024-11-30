@@ -1,6 +1,7 @@
 import { Page, PageContent, PageHeader, PageHeaderContent, PageSidebarTrigger } from '@/components/page';
+import { NoteFilters } from './components/note-filters';
 
-function Home() {
+export default function Home() {
   return (
     <Page>
       <PageHeader>
@@ -8,9 +9,9 @@ function Home() {
           <PageSidebarTrigger />
         </PageHeaderContent>
       </PageHeader>
-      <PageContent>Home</PageContent>
+      <PageContent>
+        <NoteFilters />
+      </PageContent>
     </Page>
   );
 }
-
-export default Home;
