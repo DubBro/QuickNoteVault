@@ -1,5 +1,5 @@
 import { HomeIcon, PlusIcon, Trash2Icon, Users2Icon } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 import { Button } from './ui/button';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from './ui/sidebar';
 
