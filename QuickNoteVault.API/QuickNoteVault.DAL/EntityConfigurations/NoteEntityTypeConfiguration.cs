@@ -27,8 +27,6 @@ namespace QuickNoteVault.DAL.EntityConfigurations
                   .WithMany(u => u.Notes)
                   .HasForeignKey(n => n.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasIndex(n => n.UserId);
         }
     }
 }

@@ -24,15 +24,11 @@ namespace QuickNoteVault.DAL.EntityConfigurations
                     .IsRequired()
                     .HasMaxLength(256);
 
-            builder.Property(u => u.Password)
-                   .IsRequired()
-                   .HasMaxLength(256);
-
             builder.Property(u => u.LastName)
                    .HasMaxLength(50);
 
             builder.HasMany(u => u.Notes)
-                   .WithOne()
+                   .WithOne(n => n.User)
                    .HasForeignKey(n => n.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
 
