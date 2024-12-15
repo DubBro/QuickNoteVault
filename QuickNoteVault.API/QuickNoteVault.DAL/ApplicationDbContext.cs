@@ -12,5 +12,10 @@ namespace QuickNoteVault.DAL
 
         required public DbSet<NoteEntity> Notes { get; set; }
         required public DbSet<UserEntity> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        }
     }
 }
