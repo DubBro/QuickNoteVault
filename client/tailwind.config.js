@@ -63,8 +63,21 @@ export default {
           'border': 'hsl(var(--sidebar-border))',
           'ring': 'hsl(var(--sidebar-ring))',
         },
+        brand: {
+          DEFAULT: 'hsl(var(--brand))',
+          foreground: 'hsl(var(--brand-foreground))',
+        },
+        highlight: {
+          DEFAULT: 'hsl(var(--highlight))',
+          foreground: 'hsl(var(--highlight-foreground))',
+        },
+      },
+      screens: {
+        'main-hover': {
+          raw: '(hover: hover)',
+        },
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), require('tailwind-scrollbar-hide')],
 };

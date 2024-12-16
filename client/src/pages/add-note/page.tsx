@@ -1,8 +1,9 @@
 import { Page, PageContent, PageHeader, PageHeaderContent, PageSidebarTrigger } from '@/components/page';
 import TagSelector from '@/components/tag-selector';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { useEffect, useState } from 'react';
+import NoteEditor from './components/note-editor';
 
 interface Tag {
   id: string;
@@ -52,9 +53,10 @@ export default function AddNote() {
           <PageSidebarTrigger />
         </PageHeaderContent>
       </PageHeader>
-      <PageContent className="px-4">
-        <div className="py-4">
-          <Input placeholder="Enter a Note name" />
+      <PageContent className="px-4 flex flex-col">
+        <div className="py-4 space-y-2">
+          <Label htmlFor="name">Note name</Label>
+          <Input id="name" placeholder="Enter a Note name" className="max-w-96" />
         </div>
         <div className="grid grid-cols-[auto_1fr] items-center gap-x-4">
           <span className="font-medium text-sm">Tags</span>
@@ -62,8 +64,9 @@ export default function AddNote() {
           <span className="font-medium text-sm">Collaborators</span>
           <TagSelector title="Collaborator" />
         </div>
-        <div className="py-4">
-          <Textarea placeholder="Enter a Note description" />
+        <div className="py-4 space-y-2">
+          <Label htmlFor="note">Note</Label>
+          <NoteEditor />
         </div>
       </PageContent>
     </Page>
