@@ -283,6 +283,8 @@ FakesAssemblies/
 
 # Node.js Tools for Visual Studio
 .ntvs_analysis.dat
+*.ntvs*
+*.njsproj
 node_modules/
 
 # Visual Studio 6 build log
@@ -396,6 +398,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+*.sln
 
 # Node.js
 # React
@@ -424,3 +427,12 @@ chrome-user-data
 .vscode
 *.swp
 *.swo
+*.sw?
+dist
+dist-ssr
+*.local
+
+# Logs
+logs
+*.log
+pnpm-debug.log*
