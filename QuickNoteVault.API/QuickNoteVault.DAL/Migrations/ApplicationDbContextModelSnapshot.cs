@@ -32,8 +32,7 @@ namespace QuickNoteVault.DAL.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(100000)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(" nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -50,7 +49,7 @@ namespace QuickNoteVault.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notes", (string)null);
+                    b.ToTable("Note", (string)null);
                 });
 
             modelBuilder.Entity("QuickNoteVault.DAL.Entities.UserEntity", b =>
@@ -85,7 +84,7 @@ namespace QuickNoteVault.DAL.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("QuickNoteVault.DAL.Entities.NoteEntity", b =>
