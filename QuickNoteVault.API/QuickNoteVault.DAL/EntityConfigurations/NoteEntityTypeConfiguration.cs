@@ -8,7 +8,7 @@ namespace QuickNoteVault.DAL.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<NoteEntity> builder)
         {
-            builder.ToTable("Notes");
+            builder.ToTable("Note");
 
             builder.HasKey(n => n.Id);
 
@@ -18,7 +18,7 @@ namespace QuickNoteVault.DAL.EntityConfigurations
 
             builder.Property(n => n.Content)
                   .IsRequired()
-                  .HasMaxLength(100000);
+                  .HasColumnType(" nvarchar(max)");
 
             builder.Property(n => n.CreatedAt)
                    .IsRequired();

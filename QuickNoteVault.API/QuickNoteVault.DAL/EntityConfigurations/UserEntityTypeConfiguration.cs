@@ -8,7 +8,7 @@ namespace QuickNoteVault.DAL.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("Users");
+            builder.ToTable("User");
 
             builder.HasKey(u => u.Id);
 
