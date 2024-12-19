@@ -7,7 +7,7 @@ namespace QuickNoteVault.DAL.UOW
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DbContext _context;
-        private readonly Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
+        private readonly IDictionary<Type, object> _repositories = new Dictionary<Type, object>();
         private bool _disposed = false;
 
         public UnitOfWork(DbContext context)
