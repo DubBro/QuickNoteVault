@@ -38,14 +38,9 @@ namespace QuickNoteVault.DAL.Repository
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
-            if (entity == null)
-            {
-                throw new KeyNotFoundException($"Entity with id {id} not found.");
-            }
-
             return entity;
         }
 
