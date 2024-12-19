@@ -21,17 +21,7 @@ namespace QuickNoteVault.DAL.UOW
             var type = typeof(T);
             if (!_repositories.ContainsKey(type))
             {
-                var repositoryType = typeof(Repository<>).MakeGenericType(type);
-                var repositoryInstance = Activator.CreateInstance(repositoryType, _context);
-
-                if (repositoryInstance != null)
-                {
-                    _repositories[type] = repositoryInstance;
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Failed to create repository for type {type.FullName}");
-                }
+                _repositories[type] = new Repository<T>(_context);
             }
 
             return (IRepository<T>)_repositories[type];
