@@ -7,7 +7,7 @@ namespace QuickNoteVault.DAL.UOW
     {
         Task SaveAsync(CancellationToken cancellationToken = default);
         Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
-        IRepository<T> GetRepository<T>()
-            where T : class;
+        IRepository<TEntity> GetRepository<TEntity>()
+            where TEntity : class;
     }
 }

@@ -2,14 +2,14 @@
 
 namespace QuickNoteVault.DAL.Repository
 {
-    public interface IRepository<T>
-        where T : class
+    public interface IRepository<TEntity>
+        where TEntity : class
     {
-        Task<ICollection<T>> GetAllAsync();
-        Task<T?> GetByIdAsync(int id);
-        Task AddAsync(T entity);
-        void Update(T entity);
+        Task<ICollection<TEntity>> GetAllAsync();
+        Task<TEntity?> GetByIdAsync(int id);
+        Task AddAsync(TEntity entity);
+        void Update(TEntity entity);
         Task DeleteByIdAsync(int id);
-        Task<ICollection<T>> FindByConditionAsync(Expression<Func<T, bool>> predicate);
+        Task<ICollection<TEntity>> FindByConditionAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

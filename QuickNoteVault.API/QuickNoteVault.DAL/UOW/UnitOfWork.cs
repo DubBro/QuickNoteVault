@@ -15,16 +15,16 @@ namespace QuickNoteVault.DAL.UOW
             _context = context;
         }
 
-        public IRepository<T> GetRepository<T>()
-            where T : class
+        public IRepository<TEntity> GetRepository<TEntity>()
+            where TEntity : class
         {
-            var type = typeof(T);
+            var type = typeof(TEntity);
             if (!_repositories.ContainsKey(type))
             {
-                _repositories[type] = new Repository<T>(_context);
+                _repositories[type] = new Repository<TEntity>(_context);
             }
 
-            return (IRepository<T>)_repositories[type];
+            return (IRepository<TEntity>)_repositories[type];
         }
 
         public async Task SaveAsync(CancellationToken cancellationToken = default)

@@ -3,17 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QuickNoteVault.DAL.Repository
 {
-    public class Repository<T> : IRepository<T>
-        where T : class
+    public class Repository<TEntity> : IRepository<TEntity>
+        where TEntity : class
     {
-        private readonly DbSet<T> _dbSet;
+        private readonly DbSet<TEntity> _dbSet;
 
         public Repository(DbContext context)
         {
-            _dbSet = context.Set<T>();
+            _dbSet = context.Set<TEntity>();
         }
 
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);
         }
@@ -28,23 +28,23 @@ namespace QuickNoteVault.DAL.Repository
             }
         }
 
-        public async Task<ICollection<T>> FindByConditionAsync(Expression<Func<T, bool>> predicate)
+        public async Task<ICollection<TEntity>> FindByConditionAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public async Task<ICollection<T>> GetAllAsync()
+        public async Task<ICollection<TEntity>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<TEntity?> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return entity;
         }
 
-        public void Update(T entity)
+        public void Update(TEntity entity)
         {
             _dbSet.Update(entity);
         }
