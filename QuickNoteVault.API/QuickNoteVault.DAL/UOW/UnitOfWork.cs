@@ -6,25 +6,28 @@ namespace QuickNoteVault.DAL.UOW
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DbContext _context;
-        private readonly IDictionary<Type, object> _repositories = new Dictionary<Type, object>();
+        private readonly ApplicationDbContext _context;
+        private readonly IDictionary<Type, object> _repositories;
         private bool _disposed = false;
 
-        public UnitOfWork(DbContext context)
+        public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
+            _repositories = new Dictionary<Type, object>();
         }
 
         public IRepository<TEntity> GetRepository<TEntity>()
             where TEntity : class
         {
             var type = typeof(TEntity);
-            if (!_repositories.ContainsKey(type))
+
+            if (!_repositories.TryGetValue(type, out object? repo))
             {
-                _repositories[type] = new Repository<TEntity>(_context);
+                repo = new Repository<TEntity>(_context);
+                _repositories.Add(type, repo);
             }
 
-            return (IRepository<TEntity>)_repositories[type];
+            return (IRepository<TEntity>)repo;
         }
 
         public async Task SaveAsync(CancellationToken cancellationToken = default)
