@@ -17,7 +17,7 @@ namespace QuickNoteVault.DAL.EntityConfigurations
                    .HasMaxLength(50);
 
             builder.Property(n => n.Content)
-                  .IsRequired()
+                  .IsRequired();
 
             builder.Property(n => n.CreatedAt)
                    .IsRequired();
