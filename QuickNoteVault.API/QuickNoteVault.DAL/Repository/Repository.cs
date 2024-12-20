@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace QuickNoteVault.DAL.Repository
@@ -33,9 +34,9 @@ namespace QuickNoteVault.DAL.Repository
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public async Task<ICollection<TEntity>> GetAllAsync()
+        public async Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.ToListAsync();
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
         public async Task<TEntity?> GetByIdAsync(int id)
