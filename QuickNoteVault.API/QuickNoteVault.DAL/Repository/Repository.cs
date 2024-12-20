@@ -1,53 +1,50 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
-namespace QuickNoteVault.DAL.Repository
+namespace QuickNoteVault.DAL.Repository;
+
+public class Repository<TEntity> : IRepository<TEntity>
+    where TEntity : class
 {
-    public class Repository<TEntity> : IRepository<TEntity>
-        where TEntity : class
+    private readonly DbSet<TEntity> _dbSet;
+
+    public Repository(DbContext context)
     {
-        private readonly DbSet<TEntity> _dbSet;
+        _dbSet = context.Set<TEntity>();
+    }
 
-        public Repository(DbContext context)
+    public async Task AddAsync(TEntity entity)
+    {
+        await _dbSet.AddAsync(entity);
+    }
+
+    public async Task DeleteByIdAsync(int id)
+    {
+        var entityToDelete = await _dbSet.FindAsync(id);
+
+        if (entityToDelete != null)
         {
-            _dbSet = context.Set<TEntity>();
+            _dbSet.Remove(entityToDelete);
         }
+    }
 
-        public async Task AddAsync(TEntity entity)
-        {
-            await _dbSet.AddAsync(entity);
-        }
+    public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await _dbSet.FirstOrDefaultAsync(predicate);
+    }
 
-        public async Task DeleteByIdAsync(int id)
-        {
-            var entityToDelete = await _dbSet.FindAsync(id);
+    public async Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await _dbSet.Where(predicate).ToListAsync();
+    }
 
-            if (entityToDelete != null)
-            {
-                _dbSet.Remove(entityToDelete);
-            }
-        }
+    public async Task<TEntity?> GetByIdAsync(int id)
+    {
+        return await _dbSet.FindAsync(id);
+    }
 
-        public async Task<TEntity?> FindOneByConditionAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await _dbSet.SingleOrDefaultAsync(predicate);
-        }
-
-        public async Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await _dbSet.Where(predicate).ToListAsync();
-        }
-
-        public async Task<TEntity?> GetByIdAsync(int id)
-        {
-            var entity = await _dbSet.FindAsync(id);
-            return entity;
-        }
-
-        public void Update(TEntity entity)
-        {
-            _dbSet.Update(entity);
-        }
+    public void Update(TEntity entity)
+    {
+        _dbSet.Update(entity);
     }
 }
