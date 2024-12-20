@@ -18,7 +18,6 @@ namespace QuickNoteVault.DAL.EntityConfigurations
 
             builder.Property(n => n.Content)
                   .IsRequired()
-                  .HasColumnType(" nvarchar(max)");
 
             builder.Property(n => n.CreatedAt)
                    .IsRequired();

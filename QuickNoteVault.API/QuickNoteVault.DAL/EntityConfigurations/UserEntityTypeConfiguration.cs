@@ -27,11 +27,6 @@ namespace QuickNoteVault.DAL.EntityConfigurations
             builder.Property(u => u.LastName)
                    .HasMaxLength(50);
 
-            builder.HasMany(u => u.Notes)
-                   .WithOne(n => n.User)
-                   .HasForeignKey(n => n.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasIndex(u => u.Email)
                   .IsUnique();
         }
