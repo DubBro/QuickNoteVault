@@ -29,9 +29,9 @@ namespace QuickNoteVault.DAL.Repository
             }
         }
 
-        public async Task<ICollection<TEntity>> FindByConditionAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity?> FindOneByConditionAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            return await _dbSet.SingleOrDefaultAsync(predicate);
         }
 
         public async Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)

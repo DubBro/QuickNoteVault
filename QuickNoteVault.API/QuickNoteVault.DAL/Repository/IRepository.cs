@@ -10,6 +10,6 @@ namespace QuickNoteVault.DAL.Repository
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);
         Task DeleteByIdAsync(int id);
-        Task<ICollection<TEntity>> FindByConditionAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity?> FindOneByConditionAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }
