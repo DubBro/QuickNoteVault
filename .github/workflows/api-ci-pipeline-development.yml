@@ -14,7 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
   
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -22,10 +23,10 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore ./QuickNoteVault.API.sln
+        run: dotnet restore ./QuickNoteVault.API/QuickNoteVault.API.sln
 
       - name: Build
-        run: dotnet build ./QuickNoteVault.API.sln --no-restore
+        run: dotnet build ./QuickNoteVault.API/QuickNoteVault.API.sln --no-restore
 
       - name: Test
-        run: dotnet test ./QuickNoteVault.API.sln --no-restore --no-build
+        run: dotnet test ./QuickNoteVault.API/QuickNoteVault.API.sln --no-restore --no-build
