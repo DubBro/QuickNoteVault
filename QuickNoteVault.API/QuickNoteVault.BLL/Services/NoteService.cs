@@ -24,7 +24,7 @@ public class NoteService : INoteService
     public async Task<ICollection<NoteModel>> GetAllByUserIdAsync(int userId)
     {
         var noteEntityList = await _notes.GetAllAsync(n => n.UserId == userId);
-        return _mapper.Map<List<NoteModel>>(noteEntityList);
+        return _mapper.Map<ICollection<NoteModel>>(noteEntityList);
     }
 
     public async Task<NoteModel> GetByIdAsync(int id)
@@ -76,25 +76,25 @@ public class NoteService : INoteService
             throw new NoteNotFoundException();
         }
 
-        if (noteModel.UserId <= 0)
+        var oldNoteEntity = await _notes.GetByIdAsync(noteModel.Id)
+            ?? throw new NoteNotFoundException();
+
+        if (oldNoteEntity.UserId != noteModel.UserId)
         {
             throw new UserNotFoundException();
         }
 
-        var existingNote = await _notes.GetByIdAsync(noteModel.Id)
-            ?? throw new NoteNotFoundException();
+        var newNoteEntity = _mapper.Map<NoteEntity>(noteModel);
 
-        var noteEntity = _mapper.Map<NoteEntity>(noteModel);
-
-        existingNote.Title = noteEntity.Title.Trim();
-        existingNote.Content = noteEntity.Content;
-        existingNote.ModifiedAt = DateTime.UtcNow;
+        newNoteEntity.Title = newNoteEntity.Title.Trim();
+        newNoteEntity.CreatedAt = oldNoteEntity.CreatedAt;
+        newNoteEntity.ModifiedAt = DateTime.UtcNow;
 
         using var transaction = await _unitOfWork.BeginTransactionAsync();
 
         try
         {
-            _notes.Update(existingNote);
+            _notes.Update(newNoteEntity);
 
             await _unitOfWork.SaveAsync();
             await transaction.CommitAsync();
