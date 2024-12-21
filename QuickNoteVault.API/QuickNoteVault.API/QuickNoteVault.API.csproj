@@ -4,20 +4,17 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	  <CodeAnalysisRuleSet>../settings.ruleset</CodeAnalysisRuleSet>
-	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <CodeAnalysisRuleSet>../settings.ruleset</CodeAnalysisRuleSet>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.11" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QuickNoteVault.DAL\QuickNoteVault.DAL.csproj" />
+    <ProjectReference Include="..\QuickNoteVault.BLL\QuickNoteVault.BLL.csproj" />
   </ItemGroup>
 
 </Project>
