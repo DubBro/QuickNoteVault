@@ -23,8 +23,8 @@ public class NoteService : INoteService
 
     public async Task<ICollection<NoteModel>> GetAllByUserIdAsync(int userId)
     {
-        await Task.CompletedTask;
-        throw new NotImplementedException();
+        var noteEntityList = await _notes.GetAllAsync(n => n.UserId == userId);
+        return _mapper.Map<List<NoteModel>>(noteEntityList);
     }
 
     public async Task<NoteModel> GetByIdAsync(int id)
@@ -71,13 +71,56 @@ public class NoteService : INoteService
 
     public async Task UpdateAsync(NoteModel noteModel)
     {
-        await Task.CompletedTask;
-        throw new NotImplementedException();
+        if (noteModel == null || noteModel.Content == null)
+        {
+            throw new NoteNotFoundException();
+        }
+
+        if (noteModel.UserId <= 0)
+        {
+            throw new UserNotFoundException();
+        }
+
+        var existingNote = await _notes.GetByIdAsync(noteModel.Id)
+            ?? throw new NoteNotFoundException();
+
+        var noteEntity = _mapper.Map<NoteEntity>(noteModel);
+
+        existingNote.Title = noteEntity.Title.Trim();
+        existingNote.Content = noteEntity.Content;
+        existingNote.ModifiedAt = DateTime.UtcNow;
+
+        using var transaction = await _unitOfWork.BeginTransactionAsync();
+
+        try
+        {
+            _notes.Update(existingNote);
+
+            await _unitOfWork.SaveAsync();
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task DeleteByIdAsync(int id)
     {
-        await Task.CompletedTask;
-        throw new NotImplementedException();
+        using var transaction = await _unitOfWork.BeginTransactionAsync();
+
+        try
+        {
+            await _notes.DeleteByIdAsync(id);
+
+            await _unitOfWork.SaveAsync();
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 }
