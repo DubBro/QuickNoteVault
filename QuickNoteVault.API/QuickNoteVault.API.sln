@@ -6,14 +6,18 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickNoteVault.API", "QuickNoteVault.API\QuickNoteVault.API.csproj", "{D215F3D6-95D0-4FD2-AC1C-AB7FBD219794}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3083458F-22F3-4D79-90D8-140FABF91900} = {3083458F-22F3-4D79-90D8-140FABF91900}
+		{69D59CC5-BD25-4540-B4DA-1EAA8C7225FB} = {69D59CC5-BD25-4540-B4DA-1EAA8C7225FB}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickNoteVault.DAL", "QuickNoteVault.DAL\QuickNoteVault.DAL.csproj", "{69FD285B-CE58-4B62-BD97-3C8485365F81}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickNoteVault.BLL", "QuickNoteVault.BLL\QuickNoteVault.BLL.csproj", "{3083458F-22F3-4D79-90D8-140FABF91900}"
 	ProjectSection(ProjectDependencies) = postProject
+		{69D59CC5-BD25-4540-B4DA-1EAA8C7225FB} = {69D59CC5-BD25-4540-B4DA-1EAA8C7225FB}
 		{69FD285B-CE58-4B62-BD97-3C8485365F81} = {69FD285B-CE58-4B62-BD97-3C8485365F81}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickNoteVault.Infrastructure", "QuickNoteVault.Infrastructure\QuickNoteVault.Infrastructure.csproj", "{69D59CC5-BD25-4540-B4DA-1EAA8C7225FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,10 @@ Global
 		{3083458F-22F3-4D79-90D8-140FABF91900}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3083458F-22F3-4D79-90D8-140FABF91900}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3083458F-22F3-4D79-90D8-140FABF91900}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69D59CC5-BD25-4540-B4DA-1EAA8C7225FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69D59CC5-BD25-4540-B4DA-1EAA8C7225FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69D59CC5-BD25-4540-B4DA-1EAA8C7225FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69D59CC5-BD25-4540-B4DA-1EAA8C7225FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
