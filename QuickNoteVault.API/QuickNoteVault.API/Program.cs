@@ -14,6 +14,12 @@ builder.Services.AddStorage(configuration);
 
 builder.Services.AddServices();
 
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddMaps(typeof(Program));
+    cfg.AddBLLMaps();
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
