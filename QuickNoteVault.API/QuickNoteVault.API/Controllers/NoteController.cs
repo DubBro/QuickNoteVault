@@ -54,20 +54,13 @@ public class NoteController : ControllerBase
         try
         {
             var noteModelList = await _noteService.GetAllByUserIdAsync(userId);
-            return Ok(_mapper.Map<List<NoteDTO>>(noteModelList));
+            return Ok(_mapper.Map<ICollection<NoteDTO>>(noteModelList));
         }
         catch (Exception ex)
         {
             _logger.LogError($"NoteController - {ex.Message}");
 
-            if (ex is NoteNotFoundException)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return StatusCode(500);
-            }
+            return StatusCode(500);
         }
     }
 
@@ -131,14 +124,7 @@ public class NoteController : ControllerBase
         {
             _logger.LogError($"NoteController - {ex.Message}");
 
-            if (ex is NoteNotFoundException)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return StatusCode(500);
-            }
+            return StatusCode(500);
         }
     }
 }
