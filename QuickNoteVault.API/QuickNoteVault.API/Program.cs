@@ -1,21 +1,21 @@
-using Microsoft.EntityFrameworkCore;
-using QuickNoteVault.DAL;
+using QuickNoteVault.BLL;
+
+var configuration = GetConfiguration();
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddStorage(configuration);
+
+builder.Services.AddServices();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -24,8 +24,25 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.MapControllers();
 
+if (app.Environment.IsDevelopment())
+{
+    app.InitializeDatabaseIfNotExists();
+}
+else
+{
+    app.MigrateDatabase();
+}
+
 app.Run();
+
+static IConfiguration GetConfiguration()
+{
+    var builder = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddEnvironmentVariables();
+
+    return builder.Build();
+}
