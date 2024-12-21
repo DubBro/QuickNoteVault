@@ -23,8 +23,8 @@ public class NoteService : INoteService
 
     public async Task<ICollection<NoteModel>> GetAllByUserIdAsync(int userId)
     {
-        await Task.CompletedTask;
-        throw new NotImplementedException();
+        var noteEntityList = await _notes.GetAllAsync(n => n.UserId == userId);
+        return _mapper.Map<ICollection<NoteModel>>(noteEntityList);
     }
 
     public async Task<NoteModel> GetByIdAsync(int id)
@@ -71,13 +71,56 @@ public class NoteService : INoteService
 
     public async Task UpdateAsync(NoteModel noteModel)
     {
-        await Task.CompletedTask;
-        throw new NotImplementedException();
+        if (noteModel == null || noteModel.Content == null)
+        {
+            throw new NoteNotFoundException();
+        }
+
+        var oldNoteEntity = await _notes.GetByIdAsync(noteModel.Id)
+            ?? throw new NoteNotFoundException();
+
+        if (oldNoteEntity.UserId != noteModel.UserId)
+        {
+            throw new UserNotFoundException();
+        }
+
+        var newNoteEntity = _mapper.Map<NoteEntity>(noteModel);
+
+        newNoteEntity.Title = newNoteEntity.Title.Trim();
+        newNoteEntity.CreatedAt = oldNoteEntity.CreatedAt;
+        newNoteEntity.ModifiedAt = DateTime.UtcNow;
+
+        using var transaction = await _unitOfWork.BeginTransactionAsync();
+
+        try
+        {
+            _notes.Update(newNoteEntity);
+
+            await _unitOfWork.SaveAsync();
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task DeleteByIdAsync(int id)
     {
-        await Task.CompletedTask;
-        throw new NotImplementedException();
+        using var transaction = await _unitOfWork.BeginTransactionAsync();
+
+        try
+        {
+            await _notes.DeleteByIdAsync(id);
+
+            await _unitOfWork.SaveAsync();
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 }
