@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\QuickNoteVault.BLL\QuickNoteVault.BLL.csproj" />
+    <ProjectReference Include="..\QuickNoteVault.Infrastructure\QuickNoteVault.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
