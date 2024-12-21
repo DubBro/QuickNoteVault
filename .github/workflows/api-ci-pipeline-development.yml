@@ -1,4 +1,4 @@
-name: QuickNoteVault.API CI pipeline for development branch
+name: API CI pipeline for development branch
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
       - development
 
 jobs:
-  ci:
+  api-ci-development:
     runs-on: ubuntu-latest
 
     steps:
