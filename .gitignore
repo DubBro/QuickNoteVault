@@ -432,6 +432,8 @@ dist
 dist-ssr
 *.local
 
+.env
+
 # Logs
 logs
 *.log
