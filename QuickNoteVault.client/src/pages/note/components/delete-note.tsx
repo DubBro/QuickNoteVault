@@ -1,7 +1,8 @@
 import { getNotesQueryKey } from '@/api/notes/queries';
 import { deleteNoteById } from '@/api/notes/resources';
+import { RemoveNoteDialog } from '@/components/remove-note-dialog';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Trash2Icon } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router';
@@ -34,26 +35,7 @@ export function DeleteNote() {
           Delete
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogTitle>Delete note</DialogTitle>
-        <DialogDescription>
-          Are you sure you want to delete this note? This action cannot be undone.
-        </DialogDescription>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="ghost" size="sm">Cancel</Button>
-          </DialogClose>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => {
-              mutate();
-            }}
-          >
-            Delete
-          </Button>
-        </DialogFooter>
-      </DialogContent>
+      <RemoveNoteDialog onRemove={mutate} />
     </Dialog>
 
   );
