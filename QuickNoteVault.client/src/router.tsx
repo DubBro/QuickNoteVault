@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router';
-import AddNote from './pages/add-note/page';
 import Home from './pages/home/page';
 import { loader as noteLoader } from './pages/note/loader';
 import Note from './pages/note/page';
@@ -18,10 +17,6 @@ export const router = createBrowserRouter([
       {
         path: '/notes',
         children: [
-          {
-            path: 'add',
-            element: <AddNote />,
-          },
           {
             path: ':id',
             loader: noteLoader,

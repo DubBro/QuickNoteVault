@@ -1,4 +1,4 @@
-import type { Value } from '@udecode/plate-common';
+import type { NoteFormValues } from '@/lib/types/notes/note-form-values';
 import type { loader } from './loader';
 import { PlateEditor } from '@/components/editor/plate-editor';
 import { Page, PageContent, PageHeader, PageHeaderContent, PageSidebarTrigger } from '@/components/page';
@@ -6,11 +6,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { useLoaderData } from 'react-router';
-
-interface NoteFormValues {
-  title: string;
-  content: Value;
-}
 
 export default function Note() {
   const data = useLoaderData<typeof loader>();

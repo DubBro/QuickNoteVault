@@ -3,7 +3,7 @@ import {
   Outlet,
   useRouteError,
 } from 'react-router';
-import AppSidebar from './components/app-sidebar';
+import AppSidebar from './components/app-sidebar/app-sidebar';
 import { SidebarProvider } from './components/ui/sidebar';
 import './index.css';
 

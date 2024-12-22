@@ -16,7 +16,7 @@ export async function getNoteById(noteId: number): Promise<NoteDTO> {
   return response.json();
 }
 
-export async function createNote(note: CreateNoteDTO) {
+export async function createNote(note: CreateNoteDTO): Promise<number> {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/note/add`, {
     method: 'POST',
     headers: {
