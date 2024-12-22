@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using QuickNoteVault.API.DTOs;
+using QuickNoteVault.API.DTOs.Note;
 using QuickNoteVault.BLL.Models;
 using QuickNoteVault.BLL.Services.Interfaces;
 using QuickNoteVault.Infrastructure.Exceptions;
@@ -25,7 +25,7 @@ public class NoteController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> Get(int id)
     {
         try
@@ -48,13 +48,13 @@ public class NoteController : ControllerBase
         }
     }
 
-    [HttpGet]
+    [HttpGet("{userId:int}")]
     public async Task<IActionResult> GetAll(int userId)
     {
         try
         {
             var noteModelList = await _noteService.GetAllByUserIdAsync(userId);
-            return Ok(_mapper.Map<ICollection<NoteDTO>>(noteModelList));
+            return Ok(_mapper.Map<ICollection<NoteListItemDTO>>(noteModelList));
         }
         catch (Exception ex)
         {
@@ -65,7 +65,7 @@ public class NoteController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(NoteDTO noteDTO)
+    public async Task<IActionResult> Add(NoteAddItemDTO noteDTO)
     {
         try
         {
@@ -89,7 +89,7 @@ public class NoteController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(NoteDTO noteDTO)
+    public async Task<IActionResult> Update(NoteUpdateItemDTO noteDTO)
     {
         try
         {
@@ -112,7 +112,7 @@ public class NoteController : ControllerBase
         }
     }
 
-    [HttpDelete]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         try

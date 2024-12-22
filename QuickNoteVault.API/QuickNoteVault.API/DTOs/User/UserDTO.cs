@@ -1,4 +1,4 @@
-﻿namespace QuickNoteVault.API.DTOs;
+﻿namespace QuickNoteVault.API.DTOs.User;
 
 public class UserDTO
 {
