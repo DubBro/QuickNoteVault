@@ -1,3 +1,4 @@
+import type { Value } from '@udecode/plate-common';
 import { editorPlugins } from '@/components/editor/plugins/editor-plugins';
 import { FixedToolbarPlugin } from '@/components/editor/plugins/fixed-toolbar-plugin';
 import { FloatingToolbarPlugin } from '@/components/editor/plugins/floating-toolbar-plugin';
@@ -17,8 +18,8 @@ import { HighlightLeaf } from '@/components/plate-ui/highlight-leaf';
 import { HrElement } from '@/components/plate-ui/hr-element';
 import { ImageElement } from '@/components/plate-ui/image-element';
 import { KbdLeaf } from '@/components/plate-ui/kbd-leaf';
-import { LinkElement } from '@/components/plate-ui/link-element';
 
+import { LinkElement } from '@/components/plate-ui/link-element';
 import { MediaAudioElement } from '@/components/plate-ui/media-audio-element';
 import { MediaEmbedElement } from '@/components/plate-ui/media-embed-element';
 import { MediaFileElement } from '@/components/plate-ui/media-file-element';
@@ -89,7 +90,13 @@ import {
 } from '@udecode/plate-table/react';
 import { TogglePlugin } from '@udecode/plate-toggle/react';
 
-export function useCreateEditor() {
+export function useCreateEditor({
+  value,
+  onValueChange = () => {},
+}: {
+  value?: Value;
+  onValueChange?: (value: Value) => void;
+} = {}) {
   return usePlateEditor({
     override: {
       components: withDraggables(
@@ -144,5 +151,11 @@ export function useCreateEditor() {
       FixedToolbarPlugin,
       FloatingToolbarPlugin,
     ],
+    value,
+    handlers: {
+      onChange: (ctx) => {
+        onValueChange(ctx.editor.children);
+      },
+    },
   });
 }

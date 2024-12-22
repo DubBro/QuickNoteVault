@@ -8,11 +8,12 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "cd .. && husky client/.husky"
+    "prepare": "cd .. && husky QuickNoteVault.client/.husky"
   },
   "dependencies": {
     "@ariakit/react": "^0.4.15",
     "@faker-js/faker": "^9.3.0",
+    "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.1.2",
@@ -83,6 +84,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "19.0.0-rc.1",
+    "react-hook-form": "^7.54.2",
     "react-lite-youtube-embed": "^2.4.0",
     "react-player": "^2.16.0",
     "react-resizable-panels": "^2.1.7",

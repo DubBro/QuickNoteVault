@@ -34,7 +34,7 @@ function NoteFilter({ title }: NoteFilterProps) {
 
 export function NoteFilters() {
   return (
-    <div className="p-4 flex items-center justify-between">
+    <div className="py-4 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <Input size="sm" placeholder="Filter notes..." />
         <NoteFilter title="Tags" />
