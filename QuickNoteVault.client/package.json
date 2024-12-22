@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "cd .. && husky client/.husky"
+    "prepare": "cd .. && husky QuickNoteVault.client/.husky"
   },
   "dependencies": {
     "@ariakit/react": "^0.4.15",

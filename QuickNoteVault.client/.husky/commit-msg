@@ -1,2 +1,2 @@
-cd client
+cd QuickNoteVault.client
 pnpm dlx commitlint --edit 
