@@ -26,7 +26,10 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
-        run: pnpm install --prefix ./QuickNoteVault.client
+        run: pnpm install --dir ./QuickNoteVault.client
+
+      - name: Check dir
+        run: ls
 
       - name: Build
-        run: pnpm build --prefix ./QuickNoteVault.client
+        run: pnpm build --dir ./QuickNoteVault.client
