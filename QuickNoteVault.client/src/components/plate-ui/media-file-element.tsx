@@ -6,7 +6,6 @@ import { withHOC } from '@udecode/plate-common/react';
 import { useMediaState } from '@udecode/plate-media/react';
 import { ResizableProvider } from '@udecode/plate-resizable';
 import { FileUp } from 'lucide-react';
-import React from 'react';
 import { useReadOnly } from 'slate-react';
 
 import { Caption, CaptionTextarea } from './caption';

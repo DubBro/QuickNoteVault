@@ -8,7 +8,6 @@ import {
   useIndentListToolbarButtonState,
 } from '@udecode/plate-indent-list/react';
 import { List, ListOrdered } from 'lucide-react';
-import React from 'react';
 
 import { ToolbarButton } from './toolbar';
 

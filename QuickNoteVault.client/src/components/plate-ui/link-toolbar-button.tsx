@@ -7,7 +7,6 @@ import {
   useLinkToolbarButtonState,
 } from '@udecode/plate-link/react';
 import { Link } from 'lucide-react';
-import React from 'react';
 
 import { ToolbarButton } from './toolbar';
 

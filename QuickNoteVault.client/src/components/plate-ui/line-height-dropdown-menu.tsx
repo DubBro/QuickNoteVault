@@ -8,7 +8,6 @@ import {
 } from '@udecode/plate-line-height/react';
 
 import { WrapText } from 'lucide-react';
-import React from 'react';
 
 import {
   DropdownMenu,

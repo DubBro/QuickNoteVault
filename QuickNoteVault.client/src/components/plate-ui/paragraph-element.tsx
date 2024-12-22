@@ -3,7 +3,6 @@
 import { cn } from '@udecode/cn';
 
 import { withRef } from '@udecode/plate-common/react';
-import React from 'react';
 
 import { PlateElement } from './plate-element';
 

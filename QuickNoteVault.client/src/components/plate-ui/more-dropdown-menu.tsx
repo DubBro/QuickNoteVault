@@ -15,7 +15,6 @@ import {
   SubscriptIcon,
   SuperscriptIcon,
 } from 'lucide-react';
-import React from 'react';
 
 import {
   DropdownMenu,

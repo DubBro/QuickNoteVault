@@ -10,7 +10,6 @@ import {
 } from '@udecode/plate-common/react';
 
 import { Eye, Pen } from 'lucide-react';
-import React from 'react';
 
 import {
   DropdownMenu,
