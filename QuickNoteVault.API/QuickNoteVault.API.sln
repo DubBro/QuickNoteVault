@@ -20,10 +20,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickNoteVault.Infrastructure", "QuickNoteVault.Infrastructure\QuickNoteVault.Infrastructure.csproj", "{69D59CC5-BD25-4540-B4DA-1EAA8C7225FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickNoteVault.UnitTests", "QuickNoteVault.UnitTests\QuickNoteVault.UnitTests.csproj", "{6B6D472D-D737-404D-BEBF-21D604260291}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3083458F-22F3-4D79-90D8-140FABF91900} = {3083458F-22F3-4D79-90D8-140FABF91900}
-		{69D59CC5-BD25-4540-B4DA-1EAA8C7225FB} = {69D59CC5-BD25-4540-B4DA-1EAA8C7225FB}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
