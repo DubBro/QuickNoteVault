@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using AutoMapper;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -27,18 +26,66 @@ public class NoteServiceTests
 
     private readonly IMapper _mapper;
 
-    private readonly List<NoteEntity> _fakeNoteEntities = new List<NoteEntity>
+    private readonly ICollection<NoteEntity> _fakeNoteEntities = new List<NoteEntity>
     {
-        new NoteEntity { Id = 1, Title = "Note 1", Content = "[]", CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 1 },
-        new NoteEntity { Id = 2, Title = "Note 2", Content = "[]", CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 1 },
-        new NoteEntity { Id = 3, Title = "Note 3", Content = "[]", CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 2 }
+        new NoteEntity
+        {
+            Id = 1,
+            Title = "Note 1",
+            Content = "[]",
+            CreatedAt = DateTime.MinValue,
+            ModifiedAt = DateTime.MinValue,
+            UserId = 1
+        },
+        new NoteEntity
+        {
+            Id = 2,
+            Title = "Note 2",
+            Content = "[]",
+            CreatedAt = DateTime.MinValue,
+            ModifiedAt = DateTime.MinValue,
+            UserId = 1
+        },
+        new NoteEntity
+        {
+            Id = 3,
+            Title = "Note 3",
+            Content = "[]",
+            CreatedAt = DateTime.MinValue,
+            ModifiedAt = DateTime.MinValue,
+            UserId = 2
+        }
     };
 
-    private readonly List<NoteModel> _fakeNoteModels = new List<NoteModel>
+    private readonly ICollection<NoteModel> _fakeNoteModels = new List<NoteModel>
     {
-        new NoteModel { Id = 1, Title = "Note 1", Content = new JArray(), CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 1 },
-        new NoteModel { Id = 2, Title = "Note 2", Content = new JArray(), CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 1 },
-        new NoteModel { Id = 3, Title = "Note 3", Content = new JArray(), CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 2 }
+        new NoteModel
+        {
+            Id = 1,
+            Title = "Note 1",
+            Content = new JArray(),
+            CreatedAt = DateTime.MinValue,
+            ModifiedAt = DateTime.MinValue,
+            UserId = 1
+        },
+        new NoteModel
+        {
+            Id = 2,
+            Title = "Note 2",
+            Content = new JArray(),
+            CreatedAt = DateTime.MinValue,
+            ModifiedAt = DateTime.MinValue,
+            UserId = 1
+        },
+        new NoteModel
+        {
+            Id = 3,
+            Title = "Note 3",
+            Content = new JArray(),
+            CreatedAt = DateTime.MinValue,
+            ModifiedAt = DateTime.MinValue,
+            UserId = 2
+        }
     };
 
     private readonly NoteEntity _fakeNoteEntity = new NoteEntity()
@@ -77,6 +124,55 @@ public class NoteServiceTests
             .ReturnsAsync(_dbTransaction.Object);
 
         _noteService = new NoteService(_unitOfWork.Object, _mapper);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(10)]
+    public async Task GetAllByUserIdAsync_PassingValidUserId_ReturnsNoteModelList(int userId)
+    {
+        // Arrange
+        _notes.Setup(n => n.GetAllAsync(e => e.UserId == userId)).ReturnsAsync(_fakeNoteEntities);
+
+        // Act
+        var noteModels = await _noteService.GetAllByUserIdAsync(userId);
+
+        // Assert
+        noteModels.Should().BeEquivalentTo(_fakeNoteModels);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    public async Task GetAllByUserIdAsync_PassingValidUserId_ReturnsNoteModelListWithCorrectCountOfNoteModels(int userId)
+    {
+        // Arrange
+        var expectedNotes = _fakeNoteEntities.Where(n => n.UserId == userId).ToList();
+
+        _notes.Setup(n => n.GetAllAsync(e => e.UserId == userId)).ReturnsAsync(expectedNotes);
+
+        // Act
+        var noteModels = await _noteService.GetAllByUserIdAsync(userId);
+
+        // Assert
+        Assert.Equal(expectedNotes.Count, noteModels.Count);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task GetAllByUserIdAsync_PassingInvalidUserId_ReturnsEmptyNoteModelList(int userId)
+    {
+        // Arrange
+        var emptyNoteEntityList = new List<NoteEntity>();
+
+        _notes.Setup(n => n.GetAllAsync(e => e.UserId == userId)).ReturnsAsync(emptyNoteEntityList);
+
+        // Act
+        var noteModels = await _noteService.GetAllByUserIdAsync(userId);
+
+        // Assert
+        noteModels.Should().BeEmpty();
     }
 
     [Theory]
@@ -247,59 +343,52 @@ public class NoteServiceTests
     }
 
     [Theory]
-    [InlineData(1)]
-    [InlineData(10)]
-    public async Task GetAllByUserIdAsync_PassingValidUserId_ReturnsNoteModelList(int userId)
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task UpdateAsync_PassingNoteModelWithInvalidId_ThrowsNoteNotFoundException(int id)
     {
         // Arrange
-        _notes.Setup(n => n.GetAllAsync(e => e.UserId == userId))
-              .ReturnsAsync(_fakeNoteEntities);
+        _fakeNoteModel.Id = id;
+
+        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
+            .ReturnsAsync((NoteEntity)null!);
 
         // Act
-        var noteModels = await _noteService.GetAllByUserIdAsync(userId);
+        var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
 
         // Assert
-        noteModels.Should().BeEquivalentTo(_fakeNoteModels);
-    }
-
-    [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    public async Task GetAllByUserIdAsync_PassingValidUserId_ReturnsNoteModelListWithCorrectCountOfNoteModels(int userId)
-    {
-        // Arrange
-        var expectedNotes = _fakeNoteEntities.Where(n => n.UserId == userId).ToList();
-        _notes.Setup(n => n.GetAllAsync(e => e.UserId == userId))
-              .ReturnsAsync(expectedNotes);
-
-        // Act
-        var noteModels = await _noteService.GetAllByUserIdAsync(userId);
-
-        // Assert
-        Assert.Equal(expectedNotes.Count, noteModels.Count);
+        await Assert.ThrowsAsync<NoteNotFoundException>(action);
     }
 
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task GetAllByUserIdAsync_PassingInvalidUserId_ReturnsEmptyNoteModelList(int userId)
+    public async Task UpdateAsync_PassingNoteModelWithInvalidId_CallsRepositoryFirstOrDefaultAsNoTrackingAsyncOnce(int id)
     {
         // Arrange
-        _notes.Setup(n => n.GetAllAsync(e => e.UserId == userId))
-            .ReturnsAsync((List<NoteEntity>)null!);
+        _fakeNoteModel.Id = id;
+
+        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
+            .ReturnsAsync((NoteEntity)null!);
 
         // Act
-        var noteModels = await _noteService.GetAllByUserIdAsync(userId);
+        var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
 
         // Assert
-        noteModels.Should().BeEmpty();
+        await Assert.ThrowsAsync<NoteNotFoundException>(action);
+        _notes.Verify(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()), Times.Once);
     }
 
-    [Fact]
-    public async Task UpdateAsync_WhenNoteModelIsNull_ThrowsNoteNotFoundException()
+    [Theory]
+    [InlineData(100000)]
+    [InlineData(1111111)]
+    public async Task UpdateAsync_PassingNonExistentNoteModel_ThrowsNoteNotFoundException(int id)
     {
         // Arrange
-        _fakeNoteModel = null!;
+        _fakeNoteModel.Id = id;
+
+        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
+            .ReturnsAsync((NoteEntity)null!);
 
         // Act
         var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
@@ -308,17 +397,23 @@ public class NoteServiceTests
         await Assert.ThrowsAsync<NoteNotFoundException>(action);
     }
 
-    [Fact]
-    public async Task UpdateAsync_WhenNoteModelContentIsNull_ThrowsNoteNotFoundException()
+    [Theory]
+    [InlineData(100000)]
+    [InlineData(1111111)]
+    public async Task UpdateAsync_PassingNonExistentNoteModel_CallsRepositoryFirstOrDefaultAsNoTrackingAsyncOnce(int id)
     {
         // Arrange
-        _fakeNoteModel.Content = null!;
+        _fakeNoteModel.Id = id;
+
+        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
+            .ReturnsAsync((NoteEntity)null!);
 
         // Act
         var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
 
         // Assert
         await Assert.ThrowsAsync<NoteNotFoundException>(action);
+        _notes.Verify(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()), Times.Once);
     }
 
     [Theory]
@@ -328,7 +423,8 @@ public class NoteServiceTests
     {
         // Arrange
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-              .ReturnsAsync(_fakeNoteEntity);
+            .ReturnsAsync(_fakeNoteEntity);
+
         _fakeNoteModel.UserId = userId;
 
         // Act
@@ -338,13 +434,32 @@ public class NoteServiceTests
         await Assert.ThrowsAsync<UserNotFoundException>(action);
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task UpdateAsync_PassingInvalidNoteModelUserId_CallsRepositoryFirstOrDefaultAsNoTrackingAsyncOnce(int userId)
+    {
+        // Arrange
+        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
+            .ReturnsAsync(_fakeNoteEntity);
+
+        _fakeNoteModel.UserId = userId;
+
+        // Act
+        var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
+
+        // Assert
+        await Assert.ThrowsAsync<UserNotFoundException>(action);
+        _notes.Verify(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()), Times.Once);
+    }
+
     [Fact]
     public async Task UpdateAsync_PassingValidNoteModel_ReturnsUpdatedNoteModelId()
     {
         // Arrange
         _notes.Setup(n => n.Update(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-              .ReturnsAsync(_fakeNoteEntity);
+            .ReturnsAsync(_fakeNoteEntity);
 
         // Act
         var updatedNoteId = await _noteService.UpdateAsync(_fakeNoteModel);
@@ -359,7 +474,7 @@ public class NoteServiceTests
         // Arrange
         _notes.Setup(n => n.Update(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-              .ReturnsAsync(_fakeNoteEntity);
+            .ReturnsAsync(_fakeNoteEntity);
 
         // Act
         await _noteService.UpdateAsync(_fakeNoteModel);
@@ -374,7 +489,7 @@ public class NoteServiceTests
         // Arrange
         _notes.Setup(n => n.Update(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-              .ReturnsAsync(_fakeNoteEntity);
+            .ReturnsAsync(_fakeNoteEntity);
 
         // Act
         await _noteService.UpdateAsync(_fakeNoteModel);
@@ -389,7 +504,7 @@ public class NoteServiceTests
         // Arrange
         _notes.Setup(n => n.Update(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-              .ReturnsAsync(_fakeNoteEntity);
+            .ReturnsAsync(_fakeNoteEntity);
 
         // Act
         await _noteService.UpdateAsync(_fakeNoteModel);
@@ -404,7 +519,7 @@ public class NoteServiceTests
         // Arrange
         _notes.Setup(n => n.Update(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-              .ReturnsAsync(_fakeNoteEntity);
+            .ReturnsAsync(_fakeNoteEntity);
 
         // Act
         await _noteService.UpdateAsync(_fakeNoteModel);
@@ -421,7 +536,7 @@ public class NoteServiceTests
 
         _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-              .ReturnsAsync(_fakeNoteEntity);
+            .ReturnsAsync(_fakeNoteEntity);
 
         // Act
         var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
@@ -438,7 +553,7 @@ public class NoteServiceTests
 
         _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-             .ReturnsAsync(_fakeNoteEntity);
+            .ReturnsAsync(_fakeNoteEntity);
 
         // Act
         var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
@@ -451,7 +566,7 @@ public class NoteServiceTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task DeleteByIdAsync_PassingInvalidOrNonExistentNoteModelId_ThrowsNoteNotFoundException(int id)
+    public async Task DeleteByIdAsync_PassingInvalidNoteModelId_ThrowsNoteNotFoundException(int id)
     {
         // Arrange
         _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync((NoteEntity)null!);
@@ -464,80 +579,131 @@ public class NoteServiceTests
     }
 
     [Theory]
-    [InlineData(1)]
-    [InlineData(10)]
-    public async Task DeleteByIdAsync_PassingValidNoteModelId_ReturnsDeletedNoteModelId(int id)
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task DeleteByIdAsync_PassingInvalidNoteModelId_CallsRepositoryGetByIdAsyncOnce(int id)
+    {
+        // Arrange
+        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync((NoteEntity)null!);
+
+        // Act
+        var action = async () => await _noteService.DeleteByIdAsync(id);
+
+        // Assert
+        await Assert.ThrowsAsync<NoteNotFoundException>(action);
+        _notes.Verify(n => n.GetByIdAsync(id), Times.Once);
+    }
+
+    [Theory]
+    [InlineData(100000)]
+    [InlineData(111111)]
+    public async Task DeleteByIdAsync_PassingNonExistentNoteModelId_ThrowsNoteNotFoundException(int id)
+    {
+        // Arrange
+        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync((NoteEntity)null!);
+
+        // Act
+        var action = async () => await _noteService.DeleteByIdAsync(id);
+
+        // Assert
+        await Assert.ThrowsAsync<NoteNotFoundException>(action);
+    }
+
+    [Theory]
+    [InlineData(100000)]
+    [InlineData(111111)]
+    public async Task DeleteByIdAsync_PassingNonExistentNoteModelId_CallsRepositoryGetByIdAsyncOnce(int id)
+    {
+        // Arrange
+        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync((NoteEntity)null!);
+
+        // Act
+        var action = async () => await _noteService.DeleteByIdAsync(id);
+
+        // Assert
+        await Assert.ThrowsAsync<NoteNotFoundException>(action);
+        _notes.Verify(n => n.GetByIdAsync(id), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteByIdAsync_PassingValidNoteModelId_ReturnsDeletedNoteModelId()
     {
         // Arrange
         _notes.Setup(n => n.Delete(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
-        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync(_fakeNoteEntity);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
 
         // Act
-        var deletedNoteId = await _noteService.DeleteByIdAsync(id);
+        var deletedNoteId = await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
 
         // Assert
         deletedNoteId.Should().Be(_fakeNoteEntity.Id);
     }
 
-    [Theory]
-    [InlineData(1)]
-    [InlineData(10)]
-    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsUnitOfWorkBeginTransactionAsyncOnce(int id)
+    [Fact]
+    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsRepositoryGetByIdAsyncOnce()
     {
         // Arrange
         _notes.Setup(n => n.Delete(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
-        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync(_fakeNoteEntity);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
 
         // Act
-        await _noteService.DeleteByIdAsync(id);
+        await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
+
+        // Assert
+        _notes.Verify(n => n.GetByIdAsync(_fakeNoteModel.Id), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsUnitOfWorkBeginTransactionAsyncOnce()
+    {
+        // Arrange
+        _notes.Setup(n => n.Delete(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
+
+        // Act
+        await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
 
         // Assert
         _unitOfWork.Verify(u => u.BeginTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    [Theory]
-    [InlineData(1)]
-    [InlineData(10)]
-    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsNoteRepositoryDeleteOnce(int id)
+    [Fact]
+    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsNoteRepositoryDeleteOnce()
     {
         // Arrange
         _notes.Setup(n => n.Delete(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
-        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync(_fakeNoteEntity);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
 
         // Act
-        await _noteService.DeleteByIdAsync(id);
+        await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
 
         // Assert
         _notes.Verify(n => n.Delete(It.IsAny<NoteEntity>()), Times.Once);
     }
 
-    [Theory]
-    [InlineData(1)]
-    [InlineData(10)]
-    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsUnitOfWorkSaveAsyncOnce(int id)
+    [Fact]
+    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsUnitOfWorkSaveAsyncOnce()
     {
         // Arrange
         _notes.Setup(n => n.Delete(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
-        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync(_fakeNoteEntity);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
 
         // Act
-        await _noteService.DeleteByIdAsync(id);
+        await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
 
         // Assert
         _unitOfWork.Verify(u => u.SaveAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    [Theory]
-    [InlineData(1)]
-    [InlineData(10)]
-    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsDbContextTransactionCommitAsyncOnce(int id)
+    [Fact]
+    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsDbContextTransactionCommitAsyncOnce()
     {
         // Arrange
         _notes.Setup(n => n.Delete(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
-        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync(_fakeNoteEntity);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
 
         // Act
-        await _noteService.DeleteByIdAsync(id);
+        await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
 
         // Assert
         _dbTransaction.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
@@ -548,13 +714,12 @@ public class NoteServiceTests
     {
         // Arrange
         var dbUpdateException = new DbUpdateException();
-        int id = 1;
 
         _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
-        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync(_fakeNoteEntity);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
 
         // Act
-        var action = async () => await _noteService.DeleteByIdAsync(id);
+        var action = async () => await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
 
         // Assert
         await Assert.ThrowsAsync<DbUpdateException>(action);
@@ -565,13 +730,12 @@ public class NoteServiceTests
     {
         // Arrange
         var dbUpdateException = new DbUpdateException();
-        int id = 1;
 
         _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
-        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync(_fakeNoteEntity);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
 
         // Act
-        var action = async () => await _noteService.DeleteByIdAsync(id);
+        var action = async () => await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
 
         // Assert
         await Assert.ThrowsAsync<DbUpdateException>(action);
