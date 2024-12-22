@@ -1,4 +1,4 @@
-import type { CreateNoteDTO, NoteDTO } from './types';
+import type { CreateNoteDTO, NoteDTO, UpdateNoteDTO } from './types';
 
 export async function getAllNotes(): Promise<NoteDTO[]> {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/note/getall/1`);
@@ -28,7 +28,7 @@ export async function createNote(note: CreateNoteDTO): Promise<number> {
   return response.json();
 }
 
-export async function updateNote(note: NoteDTO): Promise<NoteDTO> {
+export async function updateNote(note: Partial<UpdateNoteDTO>): Promise<NoteDTO> {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/note/update`, {
     method: 'PUT',
     headers: {
