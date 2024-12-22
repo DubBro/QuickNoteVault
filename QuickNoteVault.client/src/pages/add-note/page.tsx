@@ -53,7 +53,7 @@ export default function AddNote() {
           <PageSidebarTrigger />
         </PageHeaderContent>
       </PageHeader>
-      <PageContent className="px-4 flex flex-col">
+      <PageContent className="flex flex-col">
         <div className="py-4 space-y-2">
           <Label htmlFor="name">Note name</Label>
           <Input id="name" placeholder="Enter a Note name" className="max-w-96" />
