@@ -13,6 +13,10 @@ jobs:
   api-ci-development:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./QuickNoteVault.API
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,10 +27,10 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore ./QuickNoteVault.API/QuickNoteVault.API.sln
+        run: dotnet restore
 
       - name: Build
-        run: dotnet build ./QuickNoteVault.API/QuickNoteVault.API.sln --no-restore
+        run: dotnet build --no-restore
 
       - name: Test
-        run: dotnet test ./QuickNoteVault.API/QuickNoteVault.API.sln --no-restore --no-build
+        run: dotnet test --no-restore --no-build
