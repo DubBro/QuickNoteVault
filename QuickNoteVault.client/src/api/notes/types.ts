@@ -12,3 +12,10 @@ export interface CreateNoteDTO {
   content: any[];
   userId: number;
 }
+
+export interface UpdateNoteDTO {
+  id: number;
+  title: string;
+  content: any[];
+  userId: number;
+}
