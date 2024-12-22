@@ -6,6 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { useLoaderData } from 'react-router';
+import { DeleteNote } from './components/delete-note';
 
 export default function Note() {
   const data = useLoaderData<typeof loader>();
@@ -20,8 +21,9 @@ export default function Note() {
   return (
     <Page>
       <PageHeader>
-        <PageHeaderContent>
+        <PageHeaderContent className="justify-between">
           <PageSidebarTrigger />
+          <DeleteNote />
         </PageHeaderContent>
       </PageHeader>
       <PageContent className="space-y-4">

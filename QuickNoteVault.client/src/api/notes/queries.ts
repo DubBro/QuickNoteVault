@@ -1,6 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAllNotes, getNoteById } from './resources';
 
+export function getNotesQueryKey() {
+  return ['notes'];
+}
+
 export function useNotesQuery() {
   return useQuery({
     queryKey: ['notes'],
