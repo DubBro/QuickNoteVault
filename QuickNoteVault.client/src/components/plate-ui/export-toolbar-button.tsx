@@ -5,7 +5,6 @@ import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import { toDOMNode, useEditorRef } from '@udecode/plate-common/react';
 
 import { ArrowDownToLineIcon } from 'lucide-react';
-import React from 'react';
 
 import {
   DropdownMenu,

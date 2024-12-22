@@ -1,6 +1,6 @@
 import { useNotesQuery } from '@/api/notes/queries';
 import { Page, PageContent, PageHeader, PageHeaderContent, PageSidebarTrigger } from '@/components/page';
-import { NoteCard, NoteCardSkeleton } from './components/note-card';
+import { NoteCard, NoteCardSkeleton } from './components/note-card/note-card';
 import { NoteFilters } from './components/note-filters';
 
 export default function Home() {

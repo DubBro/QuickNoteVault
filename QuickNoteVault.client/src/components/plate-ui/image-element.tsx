@@ -6,7 +6,6 @@ import { useEditorRef, withHOC } from '@udecode/plate-common/react';
 import { useDraggable, useDraggableState } from '@udecode/plate-dnd';
 import { Image, ImagePlugin, useMediaState } from '@udecode/plate-media/react';
 import { ResizableProvider, useResizableStore } from '@udecode/plate-resizable';
-import React from 'react';
 
 import { Caption, CaptionTextarea } from './caption';
 import { MediaPopover } from './media-popover';

@@ -18,7 +18,6 @@ import {
   useFloatingLinkInsertState,
 } from '@udecode/plate-link/react';
 import { ExternalLink, Link, Text, Unlink } from 'lucide-react';
-import React from 'react';
 
 import { buttonVariants } from './button';
 import { inputVariants } from './input';

@@ -6,7 +6,6 @@ import { parseTwitterUrl, parseVideoUrl } from '@udecode/plate-media';
 
 import { MediaEmbedPlugin, useMediaState } from '@udecode/plate-media/react';
 import { ResizableProvider, useResizableStore } from '@udecode/plate-resizable';
-import React from 'react';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import { Tweet } from 'react-tweet';
 

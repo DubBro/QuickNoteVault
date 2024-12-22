@@ -6,7 +6,6 @@ import {
   useMarkToolbarButton,
   useMarkToolbarButtonState,
 } from '@udecode/plate-common/react';
-import React from 'react';
 
 import { ToolbarButton } from './toolbar';
 

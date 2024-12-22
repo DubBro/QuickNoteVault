@@ -3,7 +3,6 @@
 import { cn, withRef } from '@udecode/cn';
 
 import { PlateElement } from '@udecode/plate-common/react';
-import React from 'react';
 
 export const TableRowElement = withRef<
   typeof PlateElement,
