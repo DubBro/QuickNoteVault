@@ -17,13 +17,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check dir
+        run: ls
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
 
+      - name: Check dir
+        run: ls
+
       - name: Install pnpm
         run: npm install -g pnpm
+
+      - name: Check dir
+        run: ls
 
       - name: Install dependencies
         run: pnpm install ./QuickNoteVault.client
