@@ -70,8 +70,8 @@ public class NoteController : ControllerBase
         try
         {
             var noteModel = _mapper.Map<NoteModel>(noteDTO);
-            await _noteService.AddAsync(noteModel);
-            return Ok();
+            var addedNoteModelId = await _noteService.AddAsync(noteModel);
+            return Ok(addedNoteModelId);
         }
         catch (Exception ex)
         {
@@ -94,8 +94,8 @@ public class NoteController : ControllerBase
         try
         {
             var noteModel = _mapper.Map<NoteModel>(noteDTO);
-            await _noteService.UpdateAsync(noteModel);
-            return Ok();
+            var updatedNoteModelId = await _noteService.UpdateAsync(noteModel);
+            return Ok(updatedNoteModelId);
         }
         catch (Exception ex)
         {
@@ -117,14 +117,21 @@ public class NoteController : ControllerBase
     {
         try
         {
-            await _noteService.DeleteByIdAsync(id);
-            return Ok();
+            var deletedNoteModelId = await _noteService.DeleteByIdAsync(id);
+            return Ok(deletedNoteModelId);
         }
         catch (Exception ex)
         {
             _logger.LogError($"NoteController - {ex.Message}");
 
-            return StatusCode(500);
+            if (ex is NoteNotFoundException)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return StatusCode(500);
+            }
         }
     }
 }

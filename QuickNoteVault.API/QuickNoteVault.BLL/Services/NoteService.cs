@@ -34,7 +34,7 @@ public class NoteService : INoteService
         return _mapper.Map<NoteModel>(noteEntity);
     }
 
-    public async Task AddAsync(NoteModel noteModel)
+    public async Task<int> AddAsync(NoteModel noteModel)
     {
         if (noteModel == null || noteModel.Content == null)
         {
@@ -57,10 +57,12 @@ public class NoteService : INoteService
 
         try
         {
-            await _notes.AddAsync(noteEntity);
+            var addedNoteEntity = await _notes.AddAsync(noteEntity);
 
             await _unitOfWork.SaveAsync();
             await transaction.CommitAsync();
+
+            return addedNoteEntity.Id;
         }
         catch
         {
@@ -69,14 +71,14 @@ public class NoteService : INoteService
         }
     }
 
-    public async Task UpdateAsync(NoteModel noteModel)
+    public async Task<int> UpdateAsync(NoteModel noteModel)
     {
         if (noteModel == null || noteModel.Content == null)
         {
             throw new NoteNotFoundException();
         }
 
-        var oldNoteEntity = await _notes.GetByIdAsync(noteModel.Id)
+        var oldNoteEntity = await _notes.FirstOrDefaultAsNoTrackingAsync(e => e.Id == noteModel.Id)
             ?? throw new NoteNotFoundException();
 
         if (oldNoteEntity.UserId != noteModel.UserId)
@@ -94,10 +96,12 @@ public class NoteService : INoteService
 
         try
         {
-            _notes.Update(newNoteEntity);
+            var updatedNoteEntity = _notes.Update(newNoteEntity);
 
             await _unitOfWork.SaveAsync();
             await transaction.CommitAsync();
+
+            return updatedNoteEntity.Id;
         }
         catch
         {
@@ -106,16 +110,21 @@ public class NoteService : INoteService
         }
     }
 
-    public async Task DeleteByIdAsync(int id)
+    public async Task<int> DeleteByIdAsync(int id)
     {
+        var noteEntity = await _notes.GetByIdAsync(id)
+            ?? throw new NoteNotFoundException();
+
         using var transaction = await _unitOfWork.BeginTransactionAsync();
 
         try
         {
-            await _notes.DeleteByIdAsync(id);
+            var deletedNoteEntity = _notes.Delete(noteEntity);
 
             await _unitOfWork.SaveAsync();
             await transaction.CommitAsync();
+
+            return deletedNoteEntity.Id;
         }
         catch
         {

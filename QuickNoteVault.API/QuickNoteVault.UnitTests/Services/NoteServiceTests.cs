@@ -135,8 +135,24 @@ public class NoteServiceTests
     }
 
     [Fact]
+    public async Task AddAsync_PassingValidNoteModel_ReturnsAddedNoteModelId()
+    {
+        // Arrange
+        _notes.Setup(n => n.AddAsync(It.IsAny<NoteEntity>())).ReturnsAsync(_fakeNoteEntity);
+
+        // Act
+        var addedNoteId = await _noteService.AddAsync(_fakeNoteModel);
+
+        // Assert
+        addedNoteId.Should().Be(_fakeNoteEntity.Id);
+    }
+
+    [Fact]
     public async Task AddAsync_PassingValidNoteModel_CallsUnitOfWorkBeginTransactionAsyncOnce()
     {
+        // Arrange
+        _notes.Setup(n => n.AddAsync(It.IsAny<NoteEntity>())).ReturnsAsync(_fakeNoteEntity);
+
         // Act
         await _noteService.AddAsync(_fakeNoteModel);
 
@@ -147,6 +163,9 @@ public class NoteServiceTests
     [Fact]
     public async Task AddAsync_PassingValidNoteModel_CallsNoteRepositoryAddAsyncOnce()
     {
+        // Arrange
+        _notes.Setup(n => n.AddAsync(It.IsAny<NoteEntity>())).ReturnsAsync(_fakeNoteEntity);
+
         // Act
         await _noteService.AddAsync(_fakeNoteModel);
 
@@ -157,6 +176,9 @@ public class NoteServiceTests
     [Fact]
     public async Task AddAsync_PassingValidNoteModel_CallsUnitOfWorkSaveAsyncOnce()
     {
+        // Arrange
+        _notes.Setup(n => n.AddAsync(It.IsAny<NoteEntity>())).ReturnsAsync(_fakeNoteEntity);
+
         // Act
         await _noteService.AddAsync(_fakeNoteModel);
 
@@ -167,6 +189,9 @@ public class NoteServiceTests
     [Fact]
     public async Task AddAsync_PassingValidNoteModel_CallsDbContextTransactionCommitAsyncOnce()
     {
+        // Arrange
+        _notes.Setup(n => n.AddAsync(It.IsAny<NoteEntity>())).ReturnsAsync(_fakeNoteEntity);
+
         // Act
         await _noteService.AddAsync(_fakeNoteModel);
 

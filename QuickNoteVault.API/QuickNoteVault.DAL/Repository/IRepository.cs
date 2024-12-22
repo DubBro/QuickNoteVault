@@ -7,8 +7,8 @@ public interface IRepository<TEntity>
 {
     Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
     Task<TEntity?> GetByIdAsync(int id);
-    Task AddAsync(TEntity entity);
-    void Update(TEntity entity);
-    Task DeleteByIdAsync(int id);
-    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity> AddAsync(TEntity entity);
+    TEntity Update(TEntity entity);
+    TEntity Delete(TEntity entity);
+    Task<TEntity?> FirstOrDefaultAsNoTrackingAsync(Expression<Func<TEntity, bool>> predicate);
 }
