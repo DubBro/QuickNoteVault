@@ -31,5 +31,11 @@ jobs:
       - name: Check dir
         run: ls
 
+      - name: Change dir
+        run: cd QuickNoteVault.client
+
+      - name: Check dir
+        run: ls
+
       - name: Build
         run: pnpm build --dir ./QuickNoteVault.client
