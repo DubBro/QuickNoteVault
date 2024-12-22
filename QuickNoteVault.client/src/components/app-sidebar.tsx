@@ -8,7 +8,7 @@ function AppSidebar() {
     <Sidebar collapsible="icon">
       <div className="p-2">
         <Button asChild className="flex w-full group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 transition-[width,height,padding] overflow-hidden" size="sm">
-          <Link to="/notes/add">
+          <Link to="/notes/new">
             <PlusIcon />
             <span className="group-data-[collapsible=icon]:hidden">
               Add Note

@@ -1,19 +1,62 @@
 import type { NoteFormValues } from '@/lib/types/notes/note-form-values';
-import type { loader } from './loader';
 import { PlateEditor } from '@/components/editor/plate-editor';
 import { Page, PageContent, PageHeader, PageHeaderContent, PageSidebarTrigger } from '@/components/page';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
-import { useLoaderData } from 'react-router';
 
-export default function Note() {
-  const data = useLoaderData<typeof loader>();
+// interface Tag {
+//   id: string;
+//   name: string;
+// }
+
+export default function NewNote() {
+  // const [tags, setTags] = useState<Tag[]>([]);
+  // const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  // useEffect(() => {
+  //   setTags([
+  //     {
+  //       id: '1',
+  //       name: 'Personal',
+  //     },
+  //     {
+  //       id: '2',
+  //       name: 'Work',
+  //     },
+  //     {
+  //       id: '3',
+  //       name: 'Important',
+  //     },
+  //   ]);
+  // }, []);
+
+  // const handleTagSelect = (tag: string) => {
+  //   if (selectedTags.includes(tag)) {
+  //     setSelectedTags(prevTags => prevTags.filter(t => t !== tag));
+  //   }
+  //   else {
+  //     setSelectedTags(prevTags => [...prevTags, tag]);
+  //   }
+  // };
+
+  // const handleTagCreate = (tag: string) => {
+  //   const newTag = { id: String(tags.length + 1), name: tag };
+  //   setTags(prevTags => [...prevTags, newTag]);
+  //   setSelectedTags(prevTags => [...prevTags, newTag.id]);
+  // };
 
   const form = useForm<NoteFormValues>({
     defaultValues: {
-      title: data.title,
-      content: data.content,
+      title: '',
+      content: [{
+        type: 'p',
+        children: [
+          {
+            text: '',
+          },
+        ],
+      }],
     },
   });
 
@@ -24,7 +67,7 @@ export default function Note() {
           <PageSidebarTrigger />
         </PageHeaderContent>
       </PageHeader>
-      <PageContent className="space-y-4">
+      <PageContent className="space-y-4 pb-4">
         <Form {...form}>
           <FormField
             control={form.control}
