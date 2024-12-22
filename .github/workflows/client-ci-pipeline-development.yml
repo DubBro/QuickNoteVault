@@ -28,14 +28,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --dir ./QuickNoteVault.client
 
-      - name: Check dir
-        run: ls
-
-      - name: Change dir
-        run: cd QuickNoteVault.client
-
-      - name: Check dir
-        run: ls
+      - name: Dir
+        run: |
+          ls
+          cd QuickNoteVault.client
+          ls
 
       - name: Build
         run: pnpm build --dir ./QuickNoteVault.client
