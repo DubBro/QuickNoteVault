@@ -13,26 +13,6 @@ public class Repository<TEntity> : IRepository<TEntity>
         _dbSet = context.Set<TEntity>();
     }
 
-    public async Task AddAsync(TEntity entity)
-    {
-        await _dbSet.AddAsync(entity);
-    }
-
-    public async Task DeleteByIdAsync(int id)
-    {
-        var entityToDelete = await _dbSet.FindAsync(id);
-
-        if (entityToDelete != null)
-        {
-            _dbSet.Remove(entityToDelete);
-        }
-    }
-
-    public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
-    {
-        return await _dbSet.FirstOrDefaultAsync(predicate);
-    }
-
     public async Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
     {
         return await _dbSet.Where(predicate).ToListAsync();
@@ -43,8 +23,26 @@ public class Repository<TEntity> : IRepository<TEntity>
         return await _dbSet.FindAsync(id);
     }
 
-    public void Update(TEntity entity)
+    public async Task<TEntity> AddAsync(TEntity entity)
     {
-        _dbSet.Update(entity);
+        var entityEntry = await _dbSet.AddAsync(entity);
+        return entityEntry.Entity;
+    }
+
+    public TEntity Update(TEntity entity)
+    {
+        var entityEntry = _dbSet.Update(entity);
+        return entityEntry.Entity;
+    }
+
+    public TEntity Delete(TEntity entity)
+    {
+        var entityEntry = _dbSet.Remove(entity);
+        return entityEntry.Entity;
+    }
+
+    public async Task<TEntity?> FirstOrDefaultAsNoTrackingAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
     }
 }
