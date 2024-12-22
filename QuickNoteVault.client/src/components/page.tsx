@@ -38,7 +38,7 @@ function PageSidebarTrigger({ ...props }: React.ComponentPropsWithoutRef<typeof 
 
 const PageContent = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'main'>>(({ ...props }, ref) => {
   return (
-    <main ref={ref} {...props} />
+    <main ref={ref} {...props} className={cn('px-4', props.className)} />
   );
 });
 
