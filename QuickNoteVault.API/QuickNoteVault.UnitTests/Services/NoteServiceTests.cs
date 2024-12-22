@@ -31,14 +31,14 @@ public class NoteServiceTests
     {
         new NoteEntity { Id = 1, Title = "Note 1", Content = "[]", CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 1 },
         new NoteEntity { Id = 2, Title = "Note 2", Content = "[]", CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 1 },
-        new NoteEntity { Id = 2, Title = "Note 3", Content = "[]", CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 2 }
+        new NoteEntity { Id = 3, Title = "Note 3", Content = "[]", CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 2 }
     };
 
     private readonly List<NoteModel> _fakeNoteModels = new List<NoteModel>
     {
         new NoteModel { Id = 1, Title = "Note 1", Content = new JArray(), CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 1 },
         new NoteModel { Id = 2, Title = "Note 2", Content = new JArray(), CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 1 },
-        new NoteModel { Id = 2, Title = "Note 3", Content = new JArray(), CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 2 }
+        new NoteModel { Id = 3, Title = "Note 3", Content = new JArray(), CreatedAt = DateTime.MinValue, ModifiedAt = DateTime.MinValue, UserId = 2 }
     };
 
     private readonly NoteEntity _fakeNoteEntity = new NoteEntity()
