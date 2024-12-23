@@ -13,27 +13,27 @@ Ensure you have the following installed on your system:
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/DubBro/QuickNoteVault.git
-```
+    ```bash
+    git clone https://github.com/DubBro/QuickNoteVault.git
+    ```
 
 2. Open folder with the API project
 
-```bash
-cd QuickNoteVault/QuickNoteVault.API/QuickNoteVault.API
-```
+    ```bash
+    cd QuickNoteVault/QuickNoteVault.API/QuickNoteVault.API
+    ```
 
 3. Run the application
 
-```bash
-dotnet run
-```
+    ```bash
+    dotnet run
+    ```
 
 4. Access the API in your browser or via a tool like Postman
 
-```bash
-https://localhost:7294
-```
+    ```bash
+    https://localhost:7294
+    ```
 
 ## Usage
 

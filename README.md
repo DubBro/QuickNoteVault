@@ -19,17 +19,17 @@ Ensure you have the following installed on your system:
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/DubBro/QuickNoteVault.git
-```
+    ```bash
+    git clone https://github.com/DubBro/QuickNoteVault.git
+    ```
 
 2. Set up the backend
 
-[API README](/QuickNoteVault.API/README.md)
+    [API README](/QuickNoteVault.API/README.md)
 
 3. Set up the frontend
 
-[Client README](/QuickNoteVault.client/README.md)
+    [Client README](/QuickNoteVault.client/README.md)
 
 4. Access the application
 
