@@ -1,36 +1,56 @@
-# QuickNoteVault
+# QuickNoteVault.Client
 
-## Setup
+This is the client application of the QuickNote Vault.
 
-### Prerequisites
+## Prerequisites
+
+Ensure you have the following installed on your system:
 
 - [Node.js](https://nodejs.org/) (version 16 or higher)
 - [pnpm](https://pnpm.io/)
 
-1. Clone the repository:
+## Setup
+
+1. Clone the repository
+
     ```bash
     git clone https://github.com/DubBro/QuickNoteVault.git
+    ```
+
+2. Open folder with the client project
+
+    ```bash
     cd QuickNoteVault/QuickNoteVault.client
     ```
 
-2. Install dependencies:
+3. Install dependencies
+
     ```bash
     pnpm install
     ```
 
-3. Create a `.env` file by copying the example file:
+4. Create a `.env` file by copying the example file
+
     ```bash
     cp .env.example .env
     ```
 
-4. Update the `.env` file with your API URL:
+5. Update the `.env` file with your API URL
+
     ```env
     VITE_API_URL=https://your-api-url
     ```
 
-5. Run the development server:
+6. Run the development server
+
     ```bash
     pnpm run dev
+    ```
+
+7. Access the application
+
+    ```
+    http://localhost:5173
     ```
 
 ## Scripts
