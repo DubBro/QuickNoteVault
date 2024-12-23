@@ -17,7 +17,7 @@ Ensure you have the following installed on your system:
 git clone https://github.com/DubBro/QuickNoteVault.git
 ```
 
-2. Open folder with client project
+2. Open folder with the client project
 
 ```bash
 cd QuickNoteVault/QuickNoteVault.client
@@ -45,6 +45,12 @@ VITE_API_URL=https://your-api-url
 
 ```bash
 pnpm run dev
+```
+
+7. Access the application
+
+```
+http://localhost:5173
 ```
 
 ## Scripts

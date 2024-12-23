@@ -17,7 +17,7 @@ Ensure you have the following installed on your system:
 git clone https://github.com/DubBro/QuickNoteVault.git
 ```
 
-2. Open folder with API project
+2. Open folder with the API project
 
 ```bash
 cd QuickNoteVault/QuickNoteVault.API/QuickNoteVault.API
