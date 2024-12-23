@@ -37,12 +37,12 @@ https://localhost:7294
 
 ## Usage
 
-1. **API documentation:** use the Swagger interface at `/swagger` to explore and test API endpoints interactively.
+1. **API documentation:** Use the Swagger interface at `/swagger` to explore and test API endpoints interactively.
 
 2. **List of endpoints**:
 
-- `GET /Note/Get/{id}`: retrieve a note by Id.
-- `GET /Note/GetAll/{userId}`: retrieve all notes of a user by user's Id.
-- `POST /Note/Add`: add a new note.
-- `PUT /Note/Update`: update an existing note.
-- `DELETE /Note/Delete/{id}`: delete a note by Id.
+- `GET /Note/Get/{id}`: Retrieve a note by Id.
+- `GET /Note/GetAll/{userId}`: Retrieve all notes of a user by user's Id.
+- `POST /Note/Add`: Add a new note.
+- `PUT /Note/Update`: Update an existing note.
+- `DELETE /Note/Delete/{id}`: Delete a note by Id.
