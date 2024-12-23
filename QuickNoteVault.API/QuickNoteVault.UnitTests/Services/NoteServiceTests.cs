@@ -327,6 +327,38 @@ public class NoteServiceTests
     }
 
     [Fact]
+    public async Task AddAsync_WhenDbContextSaveChangesAsyncError_CallsUnitOfWorkBeginTransactionAsyncOnce()
+    {
+        // Arrange
+        var dbUpdateException = new DbUpdateException();
+
+        _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
+
+        // Act
+        var action = async () => await _noteService.AddAsync(_fakeNoteModel);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(action);
+        _unitOfWork.Verify(u => u.BeginTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task AddAsync_WhenDbContextSaveChangesAsyncError_CallsNoteRepositoryAddAsyncOnce()
+    {
+        // Arrange
+        var dbUpdateException = new DbUpdateException();
+
+        _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
+
+        // Act
+        var action = async () => await _noteService.AddAsync(_fakeNoteModel);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(action);
+        _notes.Verify(n => n.AddAsync(It.IsAny<NoteEntity>()), Times.Once);
+    }
+
+    [Fact]
     public async Task AddAsync_WhenDbContextSaveChangesAsyncError_CallsDbContextTransactionRollbackAsyncOnce()
     {
         // Arrange
@@ -342,16 +374,24 @@ public class NoteServiceTests
         _dbTransaction.Verify(u => u.RollbackAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    public async Task UpdateAsync_PassingNoteModelWithInvalidId_ThrowsNoteNotFoundException(int id)
+    [Fact]
+    public async Task UpdateAsync_WhenNoteModelIsNull_ThrowsNoteNotFoundException()
     {
         // Arrange
-        _fakeNoteModel.Id = id;
+        _fakeNoteModel = null!;
 
-        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-            .ReturnsAsync((NoteEntity)null!);
+        // Act
+        var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
+
+        // Assert
+        await Assert.ThrowsAsync<NoteNotFoundException>(action);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenNoteModelContentIsNull_ThrowsNoteNotFoundException()
+    {
+        // Arrange
+        _fakeNoteModel.Content = null!;
 
         // Act
         var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
@@ -363,26 +403,9 @@ public class NoteServiceTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task UpdateAsync_PassingNoteModelWithInvalidId_CallsRepositoryFirstOrDefaultAsNoTrackingAsyncOnce(int id)
-    {
-        // Arrange
-        _fakeNoteModel.Id = id;
-
-        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
-            .ReturnsAsync((NoteEntity)null!);
-
-        // Act
-        var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
-
-        // Assert
-        await Assert.ThrowsAsync<NoteNotFoundException>(action);
-        _notes.Verify(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()), Times.Once);
-    }
-
-    [Theory]
     [InlineData(100000)]
     [InlineData(1111111)]
-    public async Task UpdateAsync_PassingNonExistentNoteModel_ThrowsNoteNotFoundException(int id)
+    public async Task UpdateAsync_PassingNoteModelWithInvalidOrNonExistentId_ThrowsNoteNotFoundException(int id)
     {
         // Arrange
         _fakeNoteModel.Id = id;
@@ -398,9 +421,11 @@ public class NoteServiceTests
     }
 
     [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
     [InlineData(100000)]
     [InlineData(1111111)]
-    public async Task UpdateAsync_PassingNonExistentNoteModel_CallsRepositoryFirstOrDefaultAsNoTrackingAsyncOnce(int id)
+    public async Task UpdateAsync_PassingNoteModelWithInvalidOrNonExistentId_CallsNoteRepositoryFirstOrDefaultAsNoTrackingAsyncOnce(int id)
     {
         // Arrange
         _fakeNoteModel.Id = id;
@@ -419,7 +444,9 @@ public class NoteServiceTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task UpdateAsync_PassingInvalidNoteModelUserId_ThrowsUserNotFoundException(int userId)
+    [InlineData(100000)]
+    [InlineData(1111111)]
+    public async Task UpdateAsync_PassingNoteModelWithInvalidOrNonExistentUserId_ThrowsUserNotFoundException(int userId)
     {
         // Arrange
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
@@ -437,7 +464,9 @@ public class NoteServiceTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task UpdateAsync_PassingInvalidNoteModelUserId_CallsRepositoryFirstOrDefaultAsNoTrackingAsyncOnce(int userId)
+    [InlineData(100000)]
+    [InlineData(1111111)]
+    public async Task UpdateAsync_PassingNoteModelWithInvalidOrNonExistentUserId_CallsNoteRepositoryFirstOrDefaultAsNoTrackingAsyncOnce(int userId)
     {
         // Arrange
         _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
@@ -546,6 +575,60 @@ public class NoteServiceTests
     }
 
     [Fact]
+    public async Task UpdateAsync_WhenDbContextSaveChangesAsyncError_CallsNoteRepositoryFirstOrDefaultAsNoTrackingAsyncOnce()
+    {
+        // Arrange
+        var dbUpdateException = new DbUpdateException();
+
+        _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
+        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
+            .ReturnsAsync(_fakeNoteEntity);
+
+        // Act
+        var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(action);
+        _notes.Verify(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenDbContextSaveChangesAsyncError_CallsUnitOfWorkBeginTransactionAsyncOnce()
+    {
+        // Arrange
+        var dbUpdateException = new DbUpdateException();
+
+        _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
+        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
+            .ReturnsAsync(_fakeNoteEntity);
+
+        // Act
+        var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(action);
+        _unitOfWork.Verify(u => u.BeginTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenDbContextSaveChangesAsyncError_CallsNoteRepositoryUpdateOnce()
+    {
+        // Arrange
+        var dbUpdateException = new DbUpdateException();
+
+        _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
+        _notes.Setup(n => n.FirstOrDefaultAsNoTrackingAsync(It.IsAny<Expression<Func<NoteEntity, bool>>>()))
+            .ReturnsAsync(_fakeNoteEntity);
+
+        // Act
+        var action = async () => await _noteService.UpdateAsync(_fakeNoteModel);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(action);
+        _notes.Verify(n => n.Update(It.IsAny<NoteEntity>()), Times.Once);
+    }
+
+    [Fact]
     public async Task UpdateAsync_WhenDbContextSaveChangesAsyncError_CallsDbContextTransactionRollbackAsyncOnce()
     {
         // Arrange
@@ -566,7 +649,9 @@ public class NoteServiceTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task DeleteByIdAsync_PassingInvalidNoteModelId_ThrowsNoteNotFoundException(int id)
+    [InlineData(100000)]
+    [InlineData(111111)]
+    public async Task DeleteByIdAsync_PassingInvalidOrNonExistentNoteModelId_ThrowsNoteNotFoundException(int id)
     {
         // Arrange
         _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync((NoteEntity)null!);
@@ -581,38 +666,9 @@ public class NoteServiceTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task DeleteByIdAsync_PassingInvalidNoteModelId_CallsRepositoryGetByIdAsyncOnce(int id)
-    {
-        // Arrange
-        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync((NoteEntity)null!);
-
-        // Act
-        var action = async () => await _noteService.DeleteByIdAsync(id);
-
-        // Assert
-        await Assert.ThrowsAsync<NoteNotFoundException>(action);
-        _notes.Verify(n => n.GetByIdAsync(id), Times.Once);
-    }
-
-    [Theory]
     [InlineData(100000)]
     [InlineData(111111)]
-    public async Task DeleteByIdAsync_PassingNonExistentNoteModelId_ThrowsNoteNotFoundException(int id)
-    {
-        // Arrange
-        _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync((NoteEntity)null!);
-
-        // Act
-        var action = async () => await _noteService.DeleteByIdAsync(id);
-
-        // Assert
-        await Assert.ThrowsAsync<NoteNotFoundException>(action);
-    }
-
-    [Theory]
-    [InlineData(100000)]
-    [InlineData(111111)]
-    public async Task DeleteByIdAsync_PassingNonExistentNoteModelId_CallsRepositoryGetByIdAsyncOnce(int id)
+    public async Task DeleteByIdAsync_PassingInvalidOrNonExistentNoteModelId_CallsNoteRepositoryGetByIdAsyncOnce(int id)
     {
         // Arrange
         _notes.Setup(n => n.GetByIdAsync(id)).ReturnsAsync((NoteEntity)null!);
@@ -640,7 +696,7 @@ public class NoteServiceTests
     }
 
     [Fact]
-    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsRepositoryGetByIdAsyncOnce()
+    public async Task DeleteByIdAsync_PassingValidNoteModelId_CallsNoteRepositoryGetByIdAsyncOnce()
     {
         // Arrange
         _notes.Setup(n => n.Delete(It.IsAny<NoteEntity>())).Returns(_fakeNoteEntity);
@@ -723,6 +779,57 @@ public class NoteServiceTests
 
         // Assert
         await Assert.ThrowsAsync<DbUpdateException>(action);
+    }
+
+    [Fact]
+    public async Task DeleteByIdAsync_WhenDbContextSaveChangesAsyncError_CallsNoteRepositoryGetByIdAsyncOnce()
+    {
+        // Arrange
+        var dbUpdateException = new DbUpdateException();
+
+        _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
+
+        // Act
+        var action = async () => await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(action);
+        _notes.Verify(n => n.GetByIdAsync(_fakeNoteModel.Id), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteByIdAsync_WhenDbContextSaveChangesAsyncError_CallsUnitOfWorkBeginTransactionAsyncOnce()
+    {
+        // Arrange
+        var dbUpdateException = new DbUpdateException();
+
+        _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
+
+        // Act
+        var action = async () => await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(action);
+        _unitOfWork.Verify(u => u.BeginTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteByIdAsync_WhenDbContextSaveChangesAsyncError_CallsNoteRepositoryDeleteOnce()
+    {
+        // Arrange
+        var dbUpdateException = new DbUpdateException();
+
+        _unitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ThrowsAsync(dbUpdateException);
+        _notes.Setup(n => n.GetByIdAsync(_fakeNoteModel.Id)).ReturnsAsync(_fakeNoteEntity);
+
+        // Act
+        var action = async () => await _noteService.DeleteByIdAsync(_fakeNoteModel.Id);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(action);
+        _notes.Verify(n => n.Delete(It.IsAny<NoteEntity>()), Times.Once);
     }
 
     [Fact]
