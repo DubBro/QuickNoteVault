@@ -1,2 +1,7 @@
-cd QuickNoteVault.client
+# Exit early if the commit does not involve the frontend directory
+if ! git diff --cached --name-only | grep -q '^QuickNoteVault.client/'; then
+  exit 0
+fi
+
+cd ./QuickNoteVault.client
 pnpm dlx commitlint --edit 
