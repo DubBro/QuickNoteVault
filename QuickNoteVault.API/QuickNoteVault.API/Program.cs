@@ -49,14 +49,14 @@ app.MapControllers();
 
 if (app.Environment.IsDevelopment())
 {
-    app.InitializeDatabaseIfNotExists();
+    await app.InitializeDatabaseIfNotExistsAsync();
 }
 else
 {
-    app.MigrateDatabase();
+    await app.MigrateDatabaseAsync();
 }
 
-app.Run();
+await app.RunAsync();
 
 static IConfiguration GetConfiguration()
 {

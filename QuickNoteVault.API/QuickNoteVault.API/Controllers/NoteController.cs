@@ -35,7 +35,7 @@ public class NoteController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError($"NoteController - {ex.Message}");
+            _logger.LogError(ex, "NoteController - {ExceptionMessage}", ex.Message);
 
             if (ex is NoteNotFoundException)
             {
@@ -58,7 +58,7 @@ public class NoteController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError($"NoteController - {ex.Message}");
+            _logger.LogError(ex, "NoteController - {ExceptionMessage}", ex.Message);
 
             return StatusCode(500);
         }
@@ -75,7 +75,7 @@ public class NoteController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError($"NoteController - {ex.Message}");
+            _logger.LogError(ex, "NoteController - {ExceptionMessage}", ex.Message);
 
             if (ex is NoteNotFoundException || ex is UserNotFoundException)
             {
@@ -99,7 +99,7 @@ public class NoteController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError($"NoteController - {ex.Message}");
+            _logger.LogError(ex, "NoteController - {ExceptionMessage}", ex.Message);
 
             if (ex is NoteNotFoundException || ex is UserNotFoundException)
             {
@@ -122,7 +122,7 @@ public class NoteController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError($"NoteController - {ex.Message}");
+            _logger.LogError(ex, "NoteController - {ExceptionMessage}", ex.Message);
 
             if (ex is NoteNotFoundException)
             {
