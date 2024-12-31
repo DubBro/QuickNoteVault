@@ -23,18 +23,18 @@ public static class BusinessLogicLayerExtensions
         services.AddScoped<INoteService, NoteService>();
     }
 
-    public static void InitializeDatabaseIfNotExists(this IApplicationBuilder applicationBuilder)
+    public static async Task InitializeDatabaseIfNotExistsAsync(this IApplicationBuilder applicationBuilder)
     {
         using var scope = applicationBuilder.ApplicationServices.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        DbInitializer.Initialize(context).Wait();
+        await DbInitializer.Initialize(context);
     }
 
-    public static void MigrateDatabase(this IApplicationBuilder applicationBuilder)
+    public static async Task MigrateDatabaseAsync(this IApplicationBuilder applicationBuilder)
     {
         using var scope = applicationBuilder.ApplicationServices.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        context.Database.Migrate();
+        await context.Database.MigrateAsync();
     }
 
     public static void AddBLLMaps(this IMapperConfigurationExpression configuration)
